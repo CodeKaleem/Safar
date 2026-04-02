@@ -171,46 +171,71 @@ export default function SafarHero() {
       }
     }
  
-    let starsDrawn = false;
-    const starsBuf = document.createElement("canvas");
+    let bgDrawn = false;
+    const bgBuf = document.createElement("canvas");
  
-    function ensureStars() {
+    function ensureBg() {
       const { w, h } = getSize();
-      if (starsDrawn && starsBuf.width === w && starsBuf.height === h) return;
-      starsBuf.width = w;
-      starsBuf.height = h;
-      const sc = starsBuf.getContext("2d");
-      if (!sc) return;
-      sc.clearRect(0, 0, w, h);
+      const hw = Math.floor(w * devicePixelRatio);
+      const hh = Math.floor(h * devicePixelRatio);
+      if (bgDrawn && bgBuf.width === hw && bgBuf.height === hh) return;
+      
+      bgBuf.width = hw;
+      bgBuf.height = hh;
+      const bctx = bgBuf.getContext("2d");
+      if (!bctx) return;
+      bctx.scale(devicePixelRatio, devicePixelRatio);
+      bctx.clearRect(0, 0, w, h);
+
+      // Draw Stars
       for (let i = 0; i < 220; i++) {
         const x = Math.random() * w;
         const y = Math.random() * h;
         const r = Math.random() * 1.1 + 0.15;
         const a = Math.random() * 0.55 + 0.08;
-        sc.beginPath();
-        sc.arc(x, y, r, 0, Math.PI * 2);
-        sc.fillStyle = `rgba(255,255,255,${a})`;
-        sc.fill();
+        bctx.beginPath();
+        bctx.arc(x, y, r, 0, Math.PI * 2);
+        bctx.fillStyle = `rgba(255,255,255,${a})`;
+        bctx.fill();
       }
-      starsDrawn = true;
-    }
- 
-    function drawProvince(prov: any) {
-      const pts = prov.points.map(([nx, ny]: [number, number]) => normToCanvas(nx, ny));
-      ctx!.beginPath();
-      ctx!.moveTo(pts[0].x, pts[0].y);
-      for (let i = 1; i < pts.length; i++) ctx!.lineTo(pts[i].x, pts[i].y);
-      ctx!.closePath();
-      ctx!.fillStyle = prov.color.fill;
-      ctx!.fill();
-    }
- 
-    function drawProvinceLabel(prov: any) {
-      const pos = normToCanvas(prov.labelPos[0], prov.labelPos[1]);
-      ctx!.font = "bold 9px 'Courier New', monospace";
-      ctx!.fillStyle = "rgba(255,255,255,0.35)";
-      ctx!.textAlign = "center";
-      ctx!.fillText(prov.label.toUpperCase(), pos.x, pos.y);
+
+      // Draw mountains
+      const mx = w * 0.70;
+      bctx.beginPath();
+      bctx.moveTo(mx, h * 0.06);
+      const peaks: [number, number][] = [
+        [mx + 0.05*(w-mx), h*0.02], [mx + 0.12*(w-mx), h*0.07],
+        [mx + 0.20*(w-mx), h*0.01], [mx + 0.28*(w-mx), h*0.05],
+        [mx + 0.36*(w-mx), h*0.00], [mx + 0.44*(w-mx), h*0.03],
+        [mx + 0.55*(w-mx), h*0.06],
+      ];
+      peaks.forEach(([x, y]) => bctx.lineTo(x, y));
+      bctx.lineTo(mx + 0.6*(w-mx), h*0.06);
+      bctx.closePath();
+      bctx.fillStyle = "rgba(100,140,180,0.12)";
+      bctx.fill();
+
+      // Draw Provinces
+      PROVINCES.forEach(prov => {
+        const pts = prov.points.map(([nx, ny]: [number, number]) => normToCanvas(nx, ny));
+        bctx.beginPath();
+        bctx.moveTo(pts[0].x, pts[0].y);
+        for (let i = 1; i < pts.length; i++) bctx.lineTo(pts[i].x, pts[i].y);
+        bctx.closePath();
+        bctx.fillStyle = prov.color.fill;
+        bctx.fill();
+      });
+
+      // Draw Province Labels
+      PROVINCES.forEach(prov => {
+        const pos = normToCanvas(prov.labelPos[0], prov.labelPos[1]);
+        bctx.font = "bold 9px 'Courier New', monospace";
+        bctx.fillStyle = "rgba(255,255,255,0.35)";
+        bctx.textAlign = "center";
+        bctx.fillText(prov.label.toUpperCase(), pos.x, pos.y);
+      });
+
+      bgDrawn = true;
     }
  
     function drawRoute(progress: number) {
@@ -333,25 +358,6 @@ export default function SafarHero() {
       ctx!.restore();
     }
  
-    function drawMountains() {
-      const { w, h } = getSize();
-      const mx = w * 0.70;
-      // subtle mountain silhouette at top of map area
-      ctx!.beginPath();
-      ctx!.moveTo(mx, h * 0.06);
-      const peaks: [number, number][] = [
-        [mx + 0.05*(w-mx), h*0.02], [mx + 0.12*(w-mx), h*0.07],
-        [mx + 0.20*(w-mx), h*0.01], [mx + 0.28*(w-mx), h*0.05],
-        [mx + 0.36*(w-mx), h*0.00], [mx + 0.44*(w-mx), h*0.03],
-        [mx + 0.55*(w-mx), h*0.06],
-      ];
-      peaks.forEach(([x, y]) => ctx!.lineTo(x, y));
-      ctx!.lineTo(mx + 0.6*(w-mx), h*0.06);
-      ctx!.closePath();
-      ctx!.fillStyle = "rgba(100,140,180,0.12)";
-      ctx!.fill();
-    }
- 
     function frame(ts: number) {
       if (!startRef.current) startRef.current = ts;
       const elapsed = ts - startRef.current;
@@ -360,13 +366,8 @@ export default function SafarHero() {
       const { w, h } = getSize();
       ctx!.clearRect(0, 0, w, h);
  
-      ensureStars();
-      ctx!.drawImage(starsBuf, 0, 0);
- 
-      drawMountains();
- 
-      PROVINCES.forEach(drawProvince);
-      PROVINCES.forEach(drawProvinceLabel);
+      ensureBg();
+      ctx!.drawImage(bgBuf, 0, 0, w, h);
  
       drawRoute(progress);
       drawCities(progress);
@@ -657,13 +658,7 @@ export default function SafarHero() {
             padding-bottom: 0 !important;
           }
           .province-legend {
-            bottom: auto !important;
-            top: 24px !important;
-            right: 16px !important;
-            background: rgba(5,10,18,0.7);
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid rgba(200,169,110,0.1);
+            display: none !important;
           }
         }
       `}</style>

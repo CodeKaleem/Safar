@@ -42,18 +42,18 @@ export default function AboutUs() {
             Curating exclusive expeditions across Pakistan’s most breathtaking landscapes, our mission is to deliver experiences that leave an indelible mark on your soul. From the towering peaks of the Karakoram to the serene valleys of Kaghan, your expedition awaits.
           </p>
 
-          <div className="about-stats" style={{ display: "flex", gap: 40 }}>
+          <div className="about-stats" style={{ display: "flex", gap: 40, justifyContent: "space-between" }}>
             <div>
-              <div style={{ color: "#c8a96e", fontSize: 32, fontFamily: "'Georgia', serif", fontWeight: "bold" }}>15+</div>
-              <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, letterSpacing: "2px", marginTop: 8 }}>YEARS EXP.</div>
+              <div className="stat-number" style={{ color: "#c8a96e", fontSize: 32, fontFamily: "'Georgia', serif", fontWeight: "bold" }}>15+</div>
+              <div className="stat-label" style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, letterSpacing: "2px", marginTop: 8 }}>YEARS EXP.</div>
             </div>
             <div>
-              <div style={{ color: "#c8a96e", fontSize: 32, fontFamily: "'Georgia', serif", fontWeight: "bold" }}>50+</div>
-              <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, letterSpacing: "2px", marginTop: 8 }}>LOCATIONS</div>
+              <div className="stat-number" style={{ color: "#c8a96e", fontSize: 32, fontFamily: "'Georgia', serif", fontWeight: "bold" }}>50+</div>
+              <div className="stat-label" style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, letterSpacing: "2px", marginTop: 8 }}>LOCATIONS</div>
             </div>
             <div>
-              <div style={{ color: "#c8a96e", fontSize: 32, fontFamily: "'Georgia', serif", fontWeight: "bold" }}>10k</div>
-              <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, letterSpacing: "2px", marginTop: 8 }}>EXPLORERS</div>
+              <div className="stat-number" style={{ color: "#c8a96e", fontSize: 32, fontFamily: "'Georgia', serif", fontWeight: "bold" }}>10k</div>
+              <div className="stat-label" style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, letterSpacing: "2px", marginTop: 8 }}>EXPLORERS</div>
             </div>
           </div>
         </div>
@@ -89,8 +89,16 @@ export default function AboutUs() {
             gap: 40px !important;
           }
           .about-stats {
-            gap: 24px !important;
-            flex-wrap: wrap;
+            gap: 16px !important;
+            flex-wrap: nowrap !important;
+            justify-content: flex-start !important;
+          }
+          .stat-number {
+            fontSize: 24px !important;
+          }
+          .stat-label {
+            fontSize: 9px !important;
+            letter-spacing: 1px !important;
           }
         }
       `}</style>
