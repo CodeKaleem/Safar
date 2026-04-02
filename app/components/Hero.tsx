@@ -418,7 +418,7 @@ export default function SafarHero() {
       />
  
       {/* Left panel — hero content */}
-      <div style={{
+      <div className="hero-content" style={{
         position: "absolute", left: 0, top: 0, width: "42%", height: "100%",
         zIndex: 10, display: "flex", flexDirection: "column",
         justifyContent: "center", padding: "0 48px",
@@ -514,7 +514,7 @@ export default function SafarHero() {
         </div>
  
         {/* Stats */}
-        <div style={{
+        <div className="hero-stats" style={{
           display: "flex", gap: 0, marginTop: 48,
           animation: "fadeUp 0.7s 1.3s both",
         }}>
@@ -523,7 +523,7 @@ export default function SafarHero() {
             { num: "12K+", lbl: "Travelers" },
             { num: "8 Yrs", lbl: "Experience" },
           ].map((s, i) => (
-            <div key={i} style={{
+            <div key={i} className="hero-stat-item" style={{
               paddingRight: 28, marginRight: 28,
               borderRight: i < 2 ? "1px solid rgba(200,169,110,0.2)" : "none",
             }}>
@@ -535,7 +535,7 @@ export default function SafarHero() {
       </div>
  
       {/* Province legend */}
-      <div style={{
+      <div className="province-legend" style={{
         position: "absolute", right: 16, bottom: 20, zIndex: 10,
         display: "flex", flexDirection: "column", gap: 5,
         animation: "fadeUp 0.7s 1.5s both",
@@ -633,6 +633,38 @@ export default function SafarHero() {
         @keyframes busDrive {
           0% { transform: translateX(calc(-50vw - 160px)); }
           100% { transform: translateX(calc(50vw + 160px)); }
+        }
+        @media (max-width: 768px) {
+          .hero-content {
+            width: 100% !important;
+            padding: 0 24px !important;
+            background: linear-gradient(to right, rgba(5,10,18,0.98) 40%, rgba(5,10,18,0.5) 100%) !important;
+          }
+          .hero-stats {
+            flex-direction: column !important;
+            gap: 16px !important;
+            margin-top: 32px !important;
+          }
+          .hero-stat-item {
+            border-right: none !important;
+            border-bottom: 1px solid rgba(200,169,110,0.2) !important;
+            padding-right: 0 !important;
+            margin-right: 0 !important;
+            padding-bottom: 16px !important;
+          }
+          .hero-stat-item:last-child {
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+          }
+          .province-legend {
+            bottom: auto !important;
+            top: 24px !important;
+            right: 16px !important;
+            background: rgba(5,10,18,0.7);
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(200,169,110,0.1);
+          }
         }
       `}</style>
     </div>

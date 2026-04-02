@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer style={{
+    <footer className="footer-section" style={{
       background: "#03060a", // slightly darker than main #050a12 for distinction
       color: "#fff",
       fontFamily: "'Courier New', Courier, monospace",
@@ -10,7 +10,7 @@ export default function Footer() {
       borderTop: "1px solid rgba(200,169,110,0.15)",
       position: "relative"
     }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 48, justifyContent: "space-between", marginBottom: 60 }}>
+      <div className="footer-container" style={{ maxWidth: 1200, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 48, justifyContent: "space-between", marginBottom: 60 }}>
         
         {/* Brand */}
         <div style={{ flex: "1 1 300px" }}>
@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div style={{
+      <div className="footer-bottom" style={{
         maxWidth: 1200, margin: "0 auto", borderTop: "1px solid rgba(255,255,255,0.05)",
         paddingTop: 32, display: "flex", justifyContent: "space-between", alignItems: "center",
         flexWrap: "wrap", gap: 16
@@ -60,6 +60,14 @@ export default function Footer() {
           <a href="#" style={{ color: "rgba(255,255,255,0.3)", textDecoration: "none", fontSize: 11, letterSpacing: "1px" }}>TERMS</a>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .footer-section { padding: 40px 24px 24px !important; }
+          .footer-container { gap: 40px !important; flex-direction: column !important; }
+          .footer-bottom { flex-direction: column; align-items: flex-start !important; }
+        }
+      `}</style>
     </footer>
   );
 }

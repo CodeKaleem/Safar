@@ -27,13 +27,13 @@ export default function ContactUs() {
   };
 
   return (
-    <section style={{
+    <section className="contact-section" style={{
       background: "#050a12",
       padding: "100px 48px",
       position: "relative",
       fontFamily: "'Courier New', Courier, monospace"
     }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto", position: "relative", zIndex: 10, display: "flex", flexWrap: "wrap", gap: 64 }}>
+      <div className="contact-container" style={{ maxWidth: 1000, margin: "0 auto", position: "relative", zIndex: 10, display: "flex", flexWrap: "wrap", gap: 64 }}>
         
         {/* Contact Info */}
         <div style={{ flex: "1 1 350px" }}>
@@ -125,6 +125,17 @@ export default function ContactUs() {
           )}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .contact-section {
+            padding: 60px 24px !important;
+          }
+          .contact-container {
+            gap: 40px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

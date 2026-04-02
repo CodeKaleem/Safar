@@ -5,7 +5,7 @@ import { TRIPS } from "../data/trips";
 export default function FeaturedTrips() {
 
   return (
-    <section style={{
+    <section className="featured-section" style={{
       background: "#050a12",
       padding: "100px 48px",
       position: "relative",
@@ -147,6 +147,14 @@ export default function FeaturedTrips() {
           </Link>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .featured-section {
+            padding: 60px 24px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

@@ -14,7 +14,7 @@ export default function AboutUs() {
         background: "linear-gradient(90deg, transparent, rgba(200,169,110,0.5), transparent)"
       }} />
 
-      <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 10, display: "flex", flexWrap: "wrap", gap: 64, alignItems: "center" }}>
+      <div className="about-container" style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 10, display: "flex", flexWrap: "wrap", gap: 64, alignItems: "center" }}>
         
         {/* Left Content */}
         <div style={{ flex: "1 1 500px" }}>
@@ -42,7 +42,7 @@ export default function AboutUs() {
             Curating exclusive expeditions across Pakistan’s most breathtaking landscapes, our mission is to deliver experiences that leave an indelible mark on your soul. From the towering peaks of the Karakoram to the serene valleys of Kaghan, your expedition awaits.
           </p>
 
-          <div style={{ display: "flex", gap: 40 }}>
+          <div className="about-stats" style={{ display: "flex", gap: 40 }}>
             <div>
               <div style={{ color: "#c8a96e", fontSize: 32, fontFamily: "'Georgia', serif", fontWeight: "bold" }}>15+</div>
               <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, letterSpacing: "2px", marginTop: 8 }}>YEARS EXP.</div>
@@ -82,6 +82,18 @@ export default function AboutUs() {
           </div>
         </div>
       </div>
+      
+      <style>{`
+        @media (max-width: 768px) {
+          .about-container {
+            gap: 40px !important;
+          }
+          .about-stats {
+            gap: 24px !important;
+            flex-wrap: wrap;
+          }
+        }
+      `}</style>
     </section>
   );
 }
