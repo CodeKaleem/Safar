@@ -78,15 +78,15 @@ export default function ContactUs() {
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             <div>
               <div style={labelStyle}>EMAIL</div>
-              <div style={{ color: "#fff", fontSize: 15 }}>concierge@safartravel.com</div>
+              <div style={{ color: "#fff", fontSize: 15 }}>devlync03@gmail.com</div>
             </div>
             <div>
               <div style={labelStyle}>PHONE</div>
-              <div style={{ color: "#fff", fontSize: 15 }}>+92 300 1234567</div>
+              <div style={{ color: "#fff", fontSize: 15 }}>+92 316 2444404</div>
             </div>
             <div>
               <div style={labelStyle}>HEADQUARTERS</div>
-              <div style={{ color: "#fff", fontSize: 15, lineHeight: 1.6 }}>Suite 42, The Executive Tower<br/>Islamabad, Pakistan</div>
+              <div style={{ color: "#fff", fontSize: 15, lineHeight: 1.6 }}>Islamabad, Pakistan</div>
             </div>
           </div>
         </div>

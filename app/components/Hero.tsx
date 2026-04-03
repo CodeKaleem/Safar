@@ -467,7 +467,7 @@ export default function SafarHero() {
           margin: "0 0 36px", maxWidth: 320,
           animation: "fadeUp 0.7s 0.7s both",
         }}>
-          From the shores of Karachi to the peaks of Hunza —<br />
+          From the shores of Karachi to the peaks of Himalayas —<br />
           every road through Pakistan tells a timeless story.
         </p>
  
