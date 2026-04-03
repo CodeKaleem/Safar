@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import BookingModal from "../../components/BookingModal";
-import { TRIPS } from "../../data/trips";
+import { getTripById, Trip } from "../../data/trips";
 
 export default function TripDetailsPage() {
   const params = useParams();
   const id = params?.id as string;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHotelId, setSelectedHotelId] = useState<string | null>(null);
-  const [trip, setTrip] = useState(TRIPS[0]); 
+  const [trip, setTrip] = useState<Trip | null>(null); 
   const [mounted, setMounted] = useState(false);
 
   const handleHotelSelect = (hotelId: string) => {
@@ -21,13 +21,19 @@ export default function TripDetailsPage() {
 
   useEffect(() => {
     setMounted(true);
-    const foundTrip = TRIPS.find(t => t.id === id);
-    if (foundTrip) {
-      setTrip(foundTrip);
+    if (id) {
+      getTripById(id).then(foundTrip => {
+        if (foundTrip) setTrip(foundTrip);
+      });
     }
   }, [id]);
 
   if (!mounted) return null; // Prevent hydration mismatch
+  if (!trip) return (
+    <div style={{ background: "#050a12", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#c8a96e", fontFamily: "'Courier New', Courier, monospace" }}>
+      LOADING EXPEDITION...
+    </div>
+  );
 
   const locations = trip.title.split(" to ");
   const departureName = locations[0]?.toUpperCase() || "DEPARTURE";

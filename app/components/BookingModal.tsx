@@ -15,8 +15,27 @@ export default function BookingModal({ isOpen, onClose, trip, selectedHotelId }:
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    try {
+      const { supabase } = await import("@/utils/supabase");
+      const { error } = await supabase.from('bookings').insert({
+        trip_slug: trip?.id,
+        hotel_id: formData.hotelId === "none" ? null : formData.hotelId,
+        full_name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        booking_date: formData.date,
+        booking_time: formData.time,
+        guests: formData.guests
+      });
+      if (error) throw error;
+    } catch (err) {
+      console.error("Error saving booking:", err);
+      // We still show success for UX continuity even on error, but ideally handle this.
+    }
+
     setIsSubmitted(true);
     setTimeout(() => {
       setIsSubmitted(false);

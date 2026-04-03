@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
-import { TRIPS } from "../data/trips";
+import { Trip } from "../data/trips";
 
-export default function FeaturedTrips() {
+export default function FeaturedTrips({ trips }: { trips: Trip[] }) {
 
   return (
     <section className="featured-section" style={{
@@ -38,7 +38,7 @@ export default function FeaturedTrips() {
           display: "flex", flexDirection: "row", flexWrap: "wrap",
           gap: 32, justifyContent: "center"
         }}>
-          {TRIPS.slice(0, 3).map((trip) => (
+          {trips.slice(0, 3).map((trip) => (
             <div key={trip.id} style={{
               flex: "1 1 350px", maxWidth: 450,
               border: "1px solid rgba(200,169,110,0.15)",

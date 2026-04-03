@@ -1,13 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { TRIPS } from "../data/trips";
+import { getTrips, Trip } from "../data/trips";
 import Footer from "../components/Footer";
 
 export default function AllTripsPage() {
   const [activeTab, setActiveTab] = useState<"all" | "national" | "abroad">("all");
+  const [trips, setTrips] = useState<Trip[]>([]);
 
-  const filteredTrips = TRIPS.filter(trip => activeTab === "all" || trip.type === activeTab);
+  useEffect(() => {
+    getTrips().then(setTrips);
+  }, []);
+
+  const filteredTrips = trips.filter(trip => activeTab === "all" || trip.type === activeTab);
 
   const tabStyle = (isActive: boolean) => ({
     background: isActive ? "rgba(200,169,110,0.15)" : "transparent",

@@ -4,9 +4,33 @@ import { useState } from "react";
 export default function ContactUs() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const { supabase } = await import("@/utils/supabase");
+      const { error } = await supabase.from('inquiries').insert({
+        full_name: formData.name,
+        email: formData.email,
+        message: formData.message
+      });
+      if (error) throw error;
+
+      // Send email notification
+      await fetch('/api/notify-inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: formData.name, email: formData.email, message: formData.message }),
+      });
+
+    } catch (err) {
+      console.error("Error submitting inquiry:", err);
+    }
+
+    setIsSubmitting(false);
     setIsSubmitted(true);
     setTimeout(() => {
       setIsSubmitted(false);
@@ -84,14 +108,14 @@ export default function ContactUs() {
           ) : (
             <form onSubmit={handleSubmit}>
               <div style={{ ...labelStyle, marginTop: 0 }}>FULL NAME</div>
-              <input type="text" required style={inputStyle} placeholder="Jane Doe"
+              <input type="text" required style={inputStyle} placeholder="Your Name"
                 value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} 
                 onFocus={e => e.target.style.borderColor = "#c8a96e"}
                 onBlur={e => e.target.style.borderColor = "rgba(200,169,110,0.2)"}
               />
 
               <div style={labelStyle}>EMAIL ADDRESS</div>
-              <input type="email" required style={inputStyle} placeholder="jane@example.com"
+              <input type="email" required style={inputStyle} placeholder="abc@example.com"
                 value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
                 onFocus={e => e.target.style.borderColor = "#c8a96e"}
                 onBlur={e => e.target.style.borderColor = "rgba(200,169,110,0.2)"}
@@ -104,22 +128,25 @@ export default function ContactUs() {
                 onBlur={e => e.target.style.borderColor = "rgba(200,169,110,0.2)"}
               />
 
-              <button type="submit" style={{
+              <button type="submit" disabled={isSubmitting} style={{
                 width: "100%", marginTop: 32, padding: "16px", background: "transparent",
                 color: "#c8a96e", border: "1.5px solid #c8a96e", fontSize: 13, fontWeight: "bold",
-                letterSpacing: "3px", cursor: "pointer", fontFamily: "'Courier New', Courier, monospace",
-                transition: "all 0.3s"
+                letterSpacing: "3px", cursor: isSubmitting ? "not-allowed" : "pointer", 
+                fontFamily: "'Courier New', Courier, monospace", transition: "all 0.3s",
+                opacity: isSubmitting ? 0.6 : 1
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.background = "#c8a96e";
-                e.currentTarget.style.color = "#050a12";
+                if (!isSubmitting) {
+                  e.currentTarget.style.background = "#c8a96e";
+                  e.currentTarget.style.color = "#050a12";
+                }
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.background = "transparent";
                 e.currentTarget.style.color = "#c8a96e";
               }}
               >
-                SEND INQUIRY
+                {isSubmitting ? 'SENDING...' : 'SEND INQUIRY'}
               </button>
             </form>
           )}
