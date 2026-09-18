@@ -5,10 +5,12 @@ export default function ContactUs() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
 
     try {
       const { supabase } = await import("@/utils/supabase");
@@ -20,14 +22,20 @@ export default function ContactUs() {
       if (error) throw error;
 
       // Send email notification
-      await fetch('/api/notify-inquiry', {
+      const notificationResponse = await fetch('/api/notify-inquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: formData.name, email: formData.email, message: formData.message }),
       });
+      if (!notificationResponse.ok) {
+        console.error("Inquiry notification failed:", await notificationResponse.text());
+      }
 
     } catch (err) {
       console.error("Error submitting inquiry:", err);
+      setIsSubmitting(false);
+      setSubmitError("We could not send your inquiry. Please try again.");
+      return;
     }
 
     setIsSubmitting(false);
@@ -107,6 +115,11 @@ export default function ContactUs() {
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
+              {submitError && (
+                <p role="alert" style={{ color: "#fca5a5", fontSize: 13, lineHeight: 1.5, margin: "0 0 16px" }}>
+                  {submitError}
+                </p>
+              )}
               <div style={{ ...labelStyle, marginTop: 0 }}>FULL NAME</div>
               <input type="text" required style={inputStyle} placeholder="Your Name"
                 value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} 
