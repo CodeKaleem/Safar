@@ -4,7 +4,10 @@ export default async function Dashboard() {
   const { count: tripCount } = await supabase.from('trips').select('*', { count: 'exact', head: true });
   const { count: bookingCount } = await supabase.from('bookings').select('*', { count: 'exact', head: true });
   const { count: hotelCount } = await supabase.from('hotels').select('*', { count: 'exact', head: true });
-  const { count: inquiryCount } = await supabase.from('inquiries').select('*', { count: 'exact', head: true });
+  const { count: inquiryCount } = await supabase
+    .from('inquiries')
+    .select('*', { count: 'exact', head: true })
+    .eq('replied', false);
 
   const stats = [
     { label: "Active Expeditions", value: tripCount ?? 0 },
