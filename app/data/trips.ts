@@ -16,6 +16,11 @@ export interface Trip {
   hotels: Hotel[];
 }
 
+interface GalleryRow {
+  image_url: string;
+  display_order: number;
+}
+
 import { supabase } from '@/utils/supabase';
 
 export async function getTrips(): Promise<Trip[]> {
@@ -33,8 +38,8 @@ export async function getTrips(): Promise<Trip[]> {
   }
 
   return tripsData.map(t => {
-    // Sort gallery by display_order just in case
-    const sortedGallery = (t.trip_gallery as any[])
+    const gallery = Array.isArray(t.trip_gallery) ? t.trip_gallery as unknown as GalleryRow[] : [];
+    const sortedGallery = [...gallery]
       .sort((a, b) => a.display_order - b.display_order)
       .map(g => g.image_url);
 
@@ -46,7 +51,7 @@ export async function getTrips(): Promise<Trip[]> {
       desc: t.desc,
       type: t.type as "national" | "abroad",
       gallery: sortedGallery,
-      hotels: t.hotels as Hotel[]
+      hotels: Array.isArray(t.hotels) ? t.hotels as unknown as Hotel[] : []
     };
   });
 }
@@ -64,7 +69,8 @@ export async function getTripById(id: string): Promise<Trip | null> {
 
   if (error || !t) return null;
 
-  const sortedGallery = (t.trip_gallery as any[])
+  const gallery = Array.isArray(t.trip_gallery) ? t.trip_gallery as unknown as GalleryRow[] : [];
+  const sortedGallery = [...gallery]
     .sort((a, b) => a.display_order - b.display_order)
     .map(g => g.image_url);
 
@@ -76,6 +82,6 @@ export async function getTripById(id: string): Promise<Trip | null> {
     desc: t.desc,
     type: t.type as "national" | "abroad",
     gallery: sortedGallery,
-    hotels: t.hotels as Hotel[]
+    hotels: Array.isArray(t.hotels) ? t.hotels as unknown as Hotel[] : []
   };
 }
