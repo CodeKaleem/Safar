@@ -14,9 +14,11 @@ export default function BookingModal({ isOpen, onClose, trip, selectedHotelId }:
     name: "", email: "", phone: "", date: "", time: "", guests: 1, hotelId: ""
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     
     try {
       const { supabase } = await import("@/utils/supabase");
@@ -33,7 +35,8 @@ export default function BookingModal({ isOpen, onClose, trip, selectedHotelId }:
       if (error) throw error;
     } catch (err) {
       console.error("Error saving booking:", err);
-      // We still show success for UX continuity even on error, but ideally handle this.
+      setSubmitError("We could not save your booking. Please try again.");
+      return;
     }
 
     setIsSubmitted(true);
@@ -107,6 +110,11 @@ export default function BookingModal({ isOpen, onClose, trip, selectedHotelId }:
           </div>
         ) : (
           <>
+            {submitError && (
+              <p role="alert" style={{ color: "#fca5a5", fontSize: 13, margin: "0 0 16px", lineHeight: 1.5 }}>
+                {submitError}
+              </p>
+            )}
             <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, letterSpacing: "3px", marginBottom: 8 }}>RESERVE YOUR JOURNEY</div>
             <h2 style={{ color: "#fff", fontSize: 28, margin: "0 0 24px", fontFamily: "'Georgia', serif" }}>{trip.title}</h2>
             
@@ -139,7 +147,7 @@ export default function BookingModal({ isOpen, onClose, trip, selectedHotelId }:
                 <div style={{ flex: 1 }}>
                   <label style={labelStyle}>GUESTS</label>
                   <input type="number" min="1" max="20" required style={inputStyle}
-                    value={formData.guests} onChange={e => setFormData({...formData, guests: parseInt(e.target.value)})} />
+                    value={formData.guests} onChange={e => setFormData({...formData, guests: Number(e.target.value) || 1})} />
                 </div>
                 <div style={{ flex: 2 }}>
                   <label style={labelStyle}>SELECT HOTEL</label>
